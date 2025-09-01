@@ -1,6 +1,5 @@
 from fastapi import FastAPI 
 from fastapi.responses import JSONResponse
-import uvicorn
 import logging
 from app.manager import Manager
 
@@ -57,6 +56,3 @@ def get_antisemitic_with_2():
     except Exception as e:
         logging.error(f"Error while retrieving non-antisemitic data: {e}")
         return JSONResponse(content={"Error": str(e)})
-
-if __name__ == "__main__":
-    uvicorn.run("app.api:app", port=5000, log_level="info")
