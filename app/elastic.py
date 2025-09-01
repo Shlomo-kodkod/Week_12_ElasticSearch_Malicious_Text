@@ -26,36 +26,47 @@ class Elastic:
             logging.warning(f"Index {index_name} already exists")
             
         
-    def index_document(self, index_name: str, id: str, data: dict):
-        try:
-            self.__connection.index(index=index_name, id=id, body=data)
-            logging.info(f"Successfully indexed document")
-        except Exception as e:
-            logging.error(f"Failed to index data: {e}")
-            raise(e)
+    # def index_document(self, index_name: str, id: str, data: dict):
+    #     try:
+    #         self.__connection.index(index=index_name, id=id, body=data)
+    #         logging.info(f"Successfully indexed document")
+    #     except Exception as e:
+    #         logging.error(f"Failed to index data: {e}")
+    #         raise(e)
         
-    def index_documents(self, index_name: str, action: list):
+    def index_documents(self, index_name: str, data: list):
         try:
-            helpers.bulk(client=self.__connection, actions=action)
+            actions = [{"_index": index_name, "_source": doc} for doc in data]
+            helpers.bulk(client=self.__connection, actions=actions)
             logging.info(f"Successfully indexed documents")
         except Exception as e:
             logging.error(f"Failed to index data: {e}")
             raise(e)
         
-    def update_documents(self, index_name: str, id: str, data: dict):
+    # def update_document(self, index_name: str, id: str, data: dict):
+    #     try:
+    #         self.__connection.update(index=index_name, id=id, body=data)
+    #         logging.info(f"Successfully update document {id}")
+    #     except Exception as e:
+    #         logging.error(f"Failed to update document {id}: {e}")
+    #         raise(e)
+        
+    def update_documents(self, index_name: str, data: dict):
         try:
-            self.__connection.update(index=index_name, id=id, body=data)
-            logging.info(f"Successfully update document {id}")
+            actions = [{"_op_type": "update","_index": index_name,"_id": doc.get("id", None),"doc": doc} for doc in data]
+            helpers.bulk(client=self.__connection, actions=actions)
+            logging.info(f"Successfully update documents")
         except Exception as e:
-            logging.error(f"Failed to update document {id}: {e}")
+            logging.error(f"Failed to update documents: {e}")
             raise(e)
         
-    def delete_document(self, index_name: str, id: str):
+    def delete_documents(self, index_name: str, ids: list):
         try:
-            self.__connection.delete(index=index_name, id=id)
-            logging.info(F"Successfully deleted documents {id}")
+            actions = [{"_op_type": "delete","_index": index_name,"_id": id} for id in ids]
+            helpers.bulk(client=self.__connection, actions=actions)
+            logging.info(F"Successfully deleted documents")
         except Exception as e:
-            logging.error(f"Failed to delete document {id}")
+            logging.error(f"Failed to delete documents: {e}")
             raise(e)
         
     def search(self, index_name: str, query: dict = {"match_all": {}}) -> list:
