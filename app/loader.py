@@ -1,6 +1,5 @@
 from csv import DictReader
 import logging
-import config
 
 class Loader:
     @staticmethod

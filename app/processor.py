@@ -1,5 +1,6 @@
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+nltk.download('vader_lexicon')
 import logging
 
 
@@ -13,7 +14,7 @@ class Processor:
         result = score["compound"]
         logging.info("Successfully calculated sentiment score")
         if result >= 0.5: return "positive"
-        elif -0.49 < result <= 0.49: return "negative"
+        elif result <= -0.5: return "negative"
         else: return "neutral"
 
     
