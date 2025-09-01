@@ -4,7 +4,9 @@ import logging
 class Loader:
     @staticmethod
     def load_csv(file_path: str) -> list:
-        "Load data from csv and return dictionary."
+        """
+        Load data from csv and return dictionary.
+        """
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
                 dict_reader = list(DictReader(file))
@@ -20,7 +22,7 @@ class Loader:
         Load a blacklist of weapons from data and return list of weapons.
         """
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, 'r', encoding='utf-8') as file:
                 blacklist = list(file.read().splitlines())
             logging.info("Blacklist loaded successfully")
             return blacklist
