@@ -1,14 +1,14 @@
 from csv import DictReader
 import logging
-
+import config
 
 class Loader:
     @staticmethod
-    def load_csv(file_path: str) -> dict:
+    def load_csv(file_path: str) -> list:
         "Load data from csv and return dictionary."
         try:
-            with open("geeks.csv", 'r') as file:
-                dict_reader = DictReader(file)
+            with open(file_path, 'r', encoding='utf-8') as file:
+                dict_reader = list(DictReader(file))
             logging.info("Data loaded successfully")
             return dict_reader
         except Exception as e:
@@ -23,10 +23,8 @@ class Loader:
         try:
             with open(file_path, 'r') as file:
                 blacklist = list(file.read().splitlines())
-            logging.info("Blacklist loaded successfully.")
+            logging.info("Blacklist loaded successfully")
             return blacklist
         except Exception as e:
             logging.error(f"Failed to load blacklist: {e}")
             raise e
-
-                
